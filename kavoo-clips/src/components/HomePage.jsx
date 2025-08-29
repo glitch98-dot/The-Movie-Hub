@@ -42,8 +42,8 @@ export default function HomePage() {
         <header className="mb-12 text-center">
           <div className="flex items-center justify-center gap-4 mb-6">
             <h1 className="text-4xl md:text-6xl font-bold text-white tracking-wider">KAVOO CLIPS</h1>
-            <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-500 transition-all duration-300 cursor-pointer hover:scale-110">
-              <Play className="w-6 h-6 text-white fill-white" />
+            <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-500 transition-all duration-300 cursor-pointer hover:scale-110 hover:rotate-12">
+              <Play className="w-7 h-7 text-white fill-white ml-1" />
             </div>
           </div>
           <p className="text-blue-300 text-lg mb-2">movie database</p>
@@ -67,15 +67,18 @@ export default function HomePage() {
             <button
               onClick={handleSearch}
               disabled={isSearching || !searchTerm.trim()}
-              className="bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:shadow-blue-600/30 disabled:opacity-50"
+              className="bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:shadow-blue-600/30 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {isSearching ? (
-                <div className="flex items-center gap-2">
+                <>
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   Searching...
-                </div>
+                </>
               ) : (
-                "Search"
+                <>
+                  <Search className="w-4 h-4" />
+                  Search
+                </>
               )}
             </button>
           </div>
@@ -86,12 +89,14 @@ export default function HomePage() {
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
                   category === cat
                     ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 scale-105"
                     : "bg-white/10 backdrop-blur-sm text-blue-300 border border-white/20 hover:bg-white/20 hover:text-white hover:border-blue-400"
                 }`}
               >
+                {cat === "Movies" && <Film className="w-4 h-4" />}
+                {cat === "Series" && <Calendar className="w-4 h-4" />}
                 {cat}
               </button>
             ))}
@@ -102,50 +107,57 @@ export default function HomePage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {stats.map((stat) => (
             <div key={stat.label} className="relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-6 hover:transform hover:scale-105 hover:bg-white/15 transition-all duration-300 cursor-pointer group">
-              <div className="flex items-center justify-between mb-3">
-                <div className={`p-2 rounded-lg bg-gradient-to-r ${stat.color} text-white`}>
+              <div className="flex flex-col items-center text-center space-y-3">
+                <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white group-hover:scale-110 transition-transform duration-300 flex items-center justify-center`}>
                   {stat.icon}
                 </div>
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-3xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300">{stat.value}</p>
+                <p className="text-blue-300 text-sm font-medium">{stat.label}</p>
               </div>
-              <p className="text-blue-300 text-sm font-medium">{stat.label}</p>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
           ))}
         </div>
 
         {/* Featured Movies Section */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">Featured Movies</h2>
-            <button className="text-blue-400 hover:text-blue-300 transition-colors duration-300">View All</button>
+          <div className="flex items-center justify-center md:justify-between mb-6 flex-wrap gap-4">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Film className="w-6 h-6 text-blue-400" />
+              Featured Movies
+            </h2>
+            <button className="text-blue-400 hover:text-blue-300 transition-colors duration-300 flex items-center gap-2 hover:gap-3">
+              View All
+              <TrendingUp className="w-4 h-4" />
+            </button>
           </div>
 
-          <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 place-items-center">
             {sampleMovies.map((movie) => (
-              <div key={movie.id} className="group relative rounded-2xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 cursor-pointer hover:transform hover:scale-105">
+              <div key={movie.id} className="group relative rounded-2xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 cursor-pointer hover:transform hover:scale-105 w-full max-w-[200px]">
                 <div className="aspect-[2/3] relative overflow-hidden">
                   <img src={movie.poster} alt={movie.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   
-                  {/* Play button overlay */}
+                  {/* Play button overlay - perfectly centered */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
-                      <Play className="w-6 h-6 text-white fill-white" />
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110">
+                      <Play className="w-7 h-7 text-white fill-white ml-1" />
                     </div>
                   </div>
 
                   {/* Rating badge */}
-                  <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-lg flex items-center gap-1">
+                  <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-lg flex items-center gap-1">
                     <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                     {movie.rating}
                   </div>
                 </div>
                 
-                <div className="p-4">
-                  <h3 className="text-white font-semibold text-sm mb-1 line-clamp-2 group-hover:text-blue-300 transition-colors">{movie.title}</h3>
-                  <div className="flex items-center justify-between text-xs text-blue-400">
-                    <span>{movie.year}</span>
-                    <span className="bg-blue-600/20 px-2 py-1 rounded-full">{movie.genre}</span>
+                <div className="p-4 text-center">
+                  <h3 className="text-white font-semibold text-sm mb-2 line-clamp-2 group-hover:text-blue-300 transition-colors">{movie.title}</h3>
+                  <div className="flex items-center justify-center gap-3 text-xs text-blue-400">
+                    <span className="bg-blue-600/20 px-2 py-1 rounded-full">{movie.year}</span>
+                    <span className="bg-purple-600/20 px-2 py-1 rounded-full">{movie.genre}</span>
                   </div>
                 </div>
               </div>
@@ -155,7 +167,12 @@ export default function HomePage() {
 
         {/* Footer */}
         <div className="text-center mt-16 pt-8 border-t border-white/10">
-          <p className="text-blue-400/60 text-sm">Browse through your collection of {stats[0].value} movies and discover new favorites</p>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Heart className="w-5 h-5 text-red-400" />
+            <p className="text-blue-400/60 text-sm">Browse through your collection of {stats[0].value} movies and discover new favorites</p>
+            <Heart className="w-5 h-5 text-red-400" />
+          </div>
+          <p className="text-blue-500/40 text-xs mt-2">Built with ❤️ for movie enthusiasts</p>
         </div>
       </div>
     </div>
